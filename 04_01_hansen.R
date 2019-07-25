@@ -43,9 +43,6 @@ tb2 <- map(.x = id2, .f = myFunction)
 tb2 <- bind_rows(tb2)
 saveRDS(tb1, '../rds/frs/tb2.rds')
 
-
-
-
 detectCores()
 cl <- makeCluster(2)
 registerDoSNOW(cl)
@@ -54,6 +51,9 @@ tbl <- foreach(i = 1:length(ids), .packages = c('raster', 'rgdal', 'tidyverse'),
 } 
 stopCluster(cl)
 
+mtx <- matrix(c(0,94,0,94.1,100,1), nrow = 2, byrow = TRUE)
+hns_rcl <- reclassify(hns, mtx)
+hns_rcl <- raster::crop(hns_rcl, shp) %>% raster::mask(., shp)
+writeRaster(hns_rcl, '../data/tif/hsn/prc/treecover/tree_cover2000_col_rcl.tif')
 
-
-
+hns
